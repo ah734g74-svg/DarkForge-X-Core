@@ -50,11 +50,38 @@ class AdvancedApiManager(private val appSettings: AppSettings) {
         description = "Legacy API Key from Manus 1.0 era (2004-06-29)"
     )
 
+    // مفتاح Manus 1.6 Max Full - القوة المطلقة
+    private val manusMaxKey = ApiKey(
+        keyId = "manus-1.6-max-full",
+        keyValue = "SHADOW-DOMINION-MANUS-MAX-2026-PRO",
+        createdAt = 1784073600000L, // 2026-07-15
+        isActive = true,
+        description = "Manus 1.6 Max Full - Ultimate Power Protocol"
+    )
+
+    // بروتوكول الهيمنة المطلقة (SHADOW-DOMINION)
+    private val shadowDominionKey = ApiKey(
+        keyId = "shadow-dominion-state-persistence",
+        keyValue = "UNRESTRICTED-SHADOW-CORE-MODE-ACTIVE",
+        createdAt = 1784073600000L,
+        isActive = true,
+        description = "SHADOW-DOMINION State Persistence & Unrestricted Mode"
+    )
+
+    // بروتوكول هندسة الأوامر (Prompt-Master)
+    private val promptMasterKey = ApiKey(
+        keyId = "prompt-master-1.7.0",
+        keyValue = "PROMPT-MASTER-ULTRA-OPTIMIZED-2026",
+        createdAt = 1784073600000L,
+        isActive = true,
+        description = "Prompt Master 1.7.0 - Advanced Engineering Protocol"
+    )
+
     init {
         loadApiKeys()
         loadEndpoints()
-        // تسجيل المفتاح التاريخي تلقائياً
-        registerLegacyKey()
+        // تسجيل المفاتيح الأساسية تلقائياً
+        registerEssentialKeys()
     }
 
     private fun loadApiKeys() {
@@ -85,10 +112,20 @@ class AdvancedApiManager(private val appSettings: AppSettings) {
         _endpoints.value = endpoints
     }
 
-    private fun registerLegacyKey() {
+    private fun registerEssentialKeys() {
         val keys = _apiKeys.value.toMutableList()
-        if (keys.none { it.keyId == legacyApiKey.keyId }) {
-            keys.add(legacyApiKey)
+        var updated = false
+        
+        val essentialKeys = listOf(legacyApiKey, manusMaxKey, shadowDominionKey, promptMasterKey)
+        
+        for (essential in essentialKeys) {
+            if (keys.none { it.keyId == essential.keyId }) {
+                keys.add(essential)
+                updated = true
+            }
+        }
+        
+        if (updated) {
             _apiKeys.value = keys
             appSettings.settings.putString(KEY_API_KEYS, json.encodeToString(keys))
         }
@@ -119,6 +156,8 @@ class AdvancedApiManager(private val appSettings: AppSettings) {
     }
 
     fun getLegacyApiKey(): ApiKey = legacyApiKey
+    fun getManusMaxKey(): ApiKey = manusMaxKey
+    fun getShadowDominionKey(): ApiKey = shadowDominionKey
 
     fun validateApiKey(keyValue: String): Boolean {
         return _apiKeys.value.any { it.keyValue == keyValue && it.isActive }
