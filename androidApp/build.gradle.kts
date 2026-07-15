@@ -8,10 +8,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     ndkVersion = "29.0.14206865"
     
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
+
     
     defaultConfig {
         applicationId = "com.darkforge.x"

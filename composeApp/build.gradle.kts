@@ -17,26 +17,11 @@ composeCompiler {
 
 kotlin {
     androidLibrary {
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
         namespace = "com.darkforge.x.shared"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
-
-        androidResources {
-            enable = true
-        }
-        withHostTest {}
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
-
+    
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -69,11 +54,11 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
-        val commonMain by getting {
+        val desktopMain = sourceSets.getByName("desktopMain")
+        val commonMain = sourceSets.getByName("commonMain") {
             kotlin.srcDir(layout.buildDirectory.dir("generated/src/commonMain/kotlin"))
         }
-        val commonTest by getting {
+        val commonTest = sourceSets.getByName("commonTest") {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines.test)
@@ -82,7 +67,7 @@ kotlin {
             }
         }
 
-        val androidMain by getting {
+        val androidMain = sourceSets.getByName("androidMain") {
             kotlin.srcDir("src/jvmShared/kotlin")
         }
         desktopMain.kotlin.srcDir("src/jvmShared/kotlin")
